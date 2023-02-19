@@ -1,0 +1,4 @@
+venv
+finder_env
+npm
+.env.local
