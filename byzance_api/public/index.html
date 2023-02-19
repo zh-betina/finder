@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+    <title>Finder - mission 3 - byzance</title>
+</head>
+
+<body>
+    <div id="app">
+        <nav>
+            <ul>
+                <li><a href="/">Acceuil</a></li>
+                <li><a href="/connection">Se connecter</a></li>
+                <li><a href="/inscription">S'inscrire</a></li>
+            </ul>
+        </nav>
+        <p v-if="message" style="background-color: indianred; border-radius: 3px; padding: 5px;">
+            {{ message }}
+        </p>
+        <label> Choisissez id de chambre pour obtenir description de la chambre :
+            <input v-on:input="setInputVal($event)" name="roomNb" type="number">
+        </label>
+        <button v-on:click="searchRoomHandler()">Chercher</button>
+
+        <div v-if="room.length > 0 && !message">
+            <h2 style="background-color: lightseagreen; border-radius: 3px; padding: 5px; width: max-content;">
+                Description de la chambre avec id séléctionné
+            </h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>id</th>
+                        <th>nbCouchage</th>
+                        <th>porte</th>
+                        <th>etage</th>
+                        <th>idCategorie</th>
+                        <th>baignoire</th>
+                        <th>prixBase</th>
+                    </tr>
+                </thead>
+                <tbody v-for="item in room">
+                    <td>{{ item.id }}</td>
+                    <td>{{ item.nbcouchage }}</td>
+                    <td>{{ item.porte }}</td>
+                    <td>{{ item.etage }}</td>
+                    <td>{{ item.idcategorie }}</td>
+                    <td>{{ item.baignoire }}</td>
+                    <td>{{ item.prixbase }}</td>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</body>
+<script>
+
+    new Vue({
+        el: "#app",
+        data: {
+            message: "",
+            roomNb: null,
+            room: []
+        },
+        methods: {
+            searchRoomHandler: function () {
+                const url = `/chambre/${this.roomNb}`;
+                const resKeys = ["room", "message"];
+
+                fetch(url)
+                .then((res) => {
+                    if (res.status == 200) {
+                        this.message = "";
+                        return res.json();
+                    } else {
+                        return { "message": "L'id n'était pas saisi correctement." };
+                    }
+                }).then((resJson) => {
+                    resKeys.forEach((key)=>{
+                        if (Object.keys(resJson).includes(key)) {
+                            this[key] = resJson[key];
+                            if (Object.keys(resJson)[0] === "room" && this.room.length == 0) {
+                                this.message = "La chambre avec cet id n'était pas trouvée.";
+                            } 
+                        };
+                    });
+                });
+            },
+
+            setInputVal: function (event) {
+                this.roomNb = event.target.value;
+            }
+        }
+    });
+</script>
+<style>
+    table { border: 0.5px solid grey; }
+    td { text-align: center; }
+    thead { background-color: rgba(64, 211, 211, 0.76); }
+</style>
+</html>

@@ -8,7 +8,7 @@ function Nav() {
     return (
         <nav className="nav">
             <Logo />
-            <ul>
+            <ul className="nav_list">
                 <NavLink to="/chambres">Chambres</NavLink>
                 <NavLink to="/apropos">A propos</NavLink>
                 <NavLink to="/contact">Contact</NavLink>

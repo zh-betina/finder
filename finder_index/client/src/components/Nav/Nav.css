@@ -3,15 +3,26 @@
     position: absolute;
     top: 0;
     background: rgba(0, 0, 0, 0.55);
-    width: 97vw;
+    width: 100vw;
     display: flex;
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
-    padding: 0 2rem 0 2rem;
+    padding: 0 2rem 0 0;
 }
 
 .nav ul {
     list-style: none;
 }
 
+.nav_list {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    width: 45%;
+}
+
+.nav_list a {
+    text-transform: uppercase;
+    color: #fffbea;
+}

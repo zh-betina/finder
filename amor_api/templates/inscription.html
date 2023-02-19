@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+    <title>Finder - mission 3 - amor - inscription</title>
+</head>
+
+<body>
+    <div id="app">
+        <p v-if="message" :class="[isSuccess ? 'successMsg' : 'failMsg']" style="border-radius: 3px; padding: 5px;">
+            {{ message }}
+        </p>
+        <h1>Créer ton compte :</h1>
+        <div v-if="!isSuccess">
+            <label>
+                <h2>Nom :</h2>
+                <input v-on:input="setSurnameVal($event)" name="surname" type="text" required>
+            </label>
+            <label>
+                <h2>Prénom :</h2>
+                <input v-on:input="setNameVal($event)" name="name" type="text" required>
+            </label>
+            <label>
+                <h2>E-mail :</h2>
+                <input v-on:input="setEmailVal($event)" name="email" type="email" required>
+            </label>
+            <label>
+                <h2>Mot de passe :</h2>
+                <input v-on:input="setPwdVal($event)" name="password" type="password">
+            </label>
+            <button v-on:click="connectionHandler()">S'inscrire</button>
+        </div>
+    </div>
+</body>
+<script>
+
+    new Vue({
+        el: "#app",
+        data: {
+            message: "",
+            email: "",
+            pwd: "",
+            name: "",
+            surname: "",
+            isSuccess: false
+        },
+        methods: {
+            connectionHandler: function () {
+                const url = `/user`;
+
+                fetch(url, {
+                    method: 'post',
+                    body: JSON.stringify({ name: this.name, surname: this.surname, email: this.email, pwd: this.pwd })
+                })
+                    .then((res) => {
+                        if (res.status == 201) {
+                            this.message = "Ton compte a été crée !";
+                            this.isSuccess = true;
+                        } else {
+                            this.message = "Une erreur est survenue, essayez encore une fois, ou deux...";
+                            this.isSuccess = false;
+                        }
+                    });
+
+            },
+            setEmailVal: function (event) {
+                this.email = event.target.value;
+            },
+            setPwdVal: function (event) {
+                this.pwd = event.target.value
+            },
+            setNameVal: function (event) {
+                this.name = event.target.value
+            },
+            setSurnameVal: function (event) {
+                this.surname = event.target.value
+            }
+        }
+    });
+</script>
+<style>
+    .failMsg {
+        background-color: indianred;
+    }
+
+    .successMsg {
+        background-color: rgb(92, 205, 98);
+    }
+</style>
+
+</html>

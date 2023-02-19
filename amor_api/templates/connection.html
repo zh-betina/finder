@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+    <title>Finder - mission 3 - amor - connection</title>
+</head>
+
+<body>
+    <div id="app">
+        <p v-if="message" :class="[isSuccess ? 'successMsg' : 'failMsg']" style="border-radius: 3px; padding: 5px;">
+            {{ message }}
+        </p>
+        <h1>Connection :</h1>
+        <label>
+            <h2>E-mail :</h2>
+            <input v-on:input="setEmailVal($event)" name="email" type="email" required>
+        </label>
+        <label>
+            <h2>Mot de passe :</h2>
+            <input v-on:input="setPwdVal($event)" name="password" type="password">
+        </label>
+        <button v-on:click="connectionHandler()">Connecter</button>
+    </div>
+</body>
+<script>
+
+    new Vue({
+        el: "#app",
+        data: {
+            message: "",
+            email: "",
+            pwd: "",
+            isSuccess: false
+        },
+        methods: {
+            connectionHandler: function () {
+                const url = `/user?email=${this.email}&pwd=${this.pwd}`;
+
+                fetch(url, {
+                    method: 'get'
+                })
+                    .then((res) => {
+                        if (res.status == 200) {
+                            this.message = "Tu es connecté avec succès !";
+                            this.isSuccess = true;
+                        } else {
+                            this.message = "Beep ! T'es pas connecté, vérifie tes champs, mec.";
+                            this.isSuccess = false;
+                        }
+                    });
+
+            },
+            setEmailVal: function (event) {
+                this.email = event.target.value;
+            },
+            setPwdVal: function (event) {
+                this.pwd = event.target.value
+            }
+        }
+    });
+</script>
+<style>
+    .failMsg {
+        background-color: indianred;
+    }
+
+    .successMsg {
+        background-color: rgb(92, 205, 98);
+    }
+</style>
+
+</html>
