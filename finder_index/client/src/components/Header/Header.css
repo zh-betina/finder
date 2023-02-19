@@ -1,0 +1,8 @@
+.header {
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+    background-image: url("../../assets/img/mainPage.jpg");
+    background-size: cover;
+    background-position: center;
+}
