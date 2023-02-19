@@ -1,0 +1,15 @@
+.chambre {
+    width: 20%;
+    height: 20%;
+    background-color: #fff;
+    border-radius: 5px;
+    padding: 1rem;
+    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+    transition: all;
+    transition-duration: .3s;
+    cursor: pointer;
+}
+
+.chambre:hover {
+    box-shadow: #356caf 0px -50px 36px -28px inset;
+}

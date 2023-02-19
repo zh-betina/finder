@@ -1,0 +1,21 @@
+.auth_form {
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    width: 35%;
+    top: 40%;
+    left: 50%;
+    transform: translate(-50%);
+    text-align: center;
+}
+
+.auth_form_connect {
+    display: flex;
+    flex-direction: column;
+    row-gap: 1rem;
+}
+
+.auth_form_register {
+    display: flex;
+    flex-direction: column;
+}

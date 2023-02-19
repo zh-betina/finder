@@ -1,0 +1,30 @@
+.button {
+    min-width: 200px;
+    height: 41px;
+    border-radius: 11px;
+    font-size: 15px;
+    font-weight: 500;
+    border-style: none;
+    margin: 1rem;
+    cursor: pointer;
+    text-transform: uppercase;
+    transition: all .3s;
+}
+
+.button_primary {
+    background-color: #c9ada7;
+    color: #193250;
+}
+
+.button_primary:hover {
+    background-color: #F2E9E4;
+}
+
+.button_secondary {
+    background-color: #193250;
+    color: #ebebeb;
+}
+
+.button_secondary:hover {
+    background-color: #12243a;
+}
