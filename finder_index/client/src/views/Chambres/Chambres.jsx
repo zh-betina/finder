@@ -1,97 +1,71 @@
 import React, { useEffect, useState } from "react";
 import "./Chambres.css";
-import {
-  getAmorRooms,
-  getByzanceRooms,
-  getCaraibesRooms,
-} from "../../api/rooms.api";
+import { getRooms } from "../../api/rooms.api";
 import Header from "../../components/Header/Header";
-import { getAmorCategories } from "../../api/categories.api";
 import Chambre from "./Chambre";
+import Input from "../../components/Input/Input";
 
 function Chambres() {
-  const [roomsAmor, setRoomsAmor] = useState([]);
-  const [roomsByz, setRoomsByz] = useState([]);
-  const [roomsCaraib, setRoomsCaraib] = useState([]);
+  const [rooms, setRooms] = useState([]);
   const CATEGORIES = ["", "Standard", "Confort", "Premium", "Luxe"];
 
   useEffect(() => {
-    getAmorRooms().then((res) => {
-      setRoomsAmor(res.data);
-    });
-    getByzanceRooms().then((res) => {
-      setRoomsByz(res.data.room);
-    });
-    getCaraibesRooms().then((res) => {
-      setRoomsCaraib(res.data.rooms);
+    getRooms().then((res) => {
+      console.log(res.data);
+      setRooms(res.data);
     });
   }, []);
 
   return (
     <main className="chambres">
       <Header>
+        <div className="toolbox">
+          <Input type="text" placeholder="Chercher" />
+          <div className="filter_choice">
+            <h3>Filtrer par :</h3>
+            <label>
+              <input type="checkbox" />
+              hôtel
+            </label>
+            <label>
+              <input type="checkbox" />
+              prix
+            </label>
+            <label>
+              <input type="checkbox" />
+              nombre de couchages
+            </label>
+            <label>
+              <input type="checkbox" />
+              étage
+            </label>
+            <label>
+              <input type="checkbox" />
+              categorie
+            </label>
+          </div>
+        </div>
         <div className="chambres_list">
-            {roomsAmor.length > 0 ? (
-                <>
-                    <h2>Chambres d'hôtel Amor</h2>
-                    <div className="rooms">
-                    {roomsAmor.map((room, idx) => {
-                        const roomProps = {
-                            nbCouchage: room.nbCouchage,
-                            etage: room.etage,
-                            baignoire: room.baignoire,
-                            prixBase: room.prixBase,
-                            porte: room.porte,
-                            categorie: CATEGORIES[room.idCategorie]
-                        }
-                        return <Chambre key={idx} {...roomProps}></Chambre>;
-                    })}
-                    </div>
-                </>
+          <div className="rooms">
+            {rooms.length > 0 ? (
+              rooms.map((room, idx) => {
+                return (
+                  <Chambre
+                    key={idx}
+                    nbCouchage={room.nbCouchage ?? room.nbcouchage}
+                    etage={room.etage}
+                    baignoire={room.baignoire}
+                    prixBase={room.prixBase ?? room.prixbase}
+                    porte={room.porte}
+                    categorie={room.idCategorie ?? room.idcategorie}
+                    hotel={room.hotel}
+                  />
+                );
+              })
             ) : (
-                <p>No rooms found</p>
+              <p>No rooms found</p>
             )}
-            {roomsByz.length > 0 ? (
-                <>
-                <h2>Chambres d'hôtel Byzance</h2>
-                <div className="rooms">
-                {roomsByz.map((room, idx) => {
-                    const roomProps = {
-                        nbCouchage: room.nbCouchage,
-                        etage: room.etage,
-                        baignoire: room.baignoire,
-                        prixBase: room.prixBase,
-                        porte: room.porte,
-                        categorie: CATEGORIES[room.idcategorie]
-                    }
-                    return <Chambre key={idx} {...roomProps}></Chambre>;
-                })}
-                </div>
-                </>
-            ) : (
-                <p>No rooms found</p>
-            )}
-
-            {roomsCaraib.length > 0 ? (
-                <>
-                <h2>Chambres d'hôtel Caraibes</h2>
-                <div className="rooms">
-                {roomsCaraib.map((room, idx) => {
-                    const roomProps = {
-                        nbCouchage: room.nbCouchage,
-                        etage: room.etage,
-                        baignoire: room.baignoire,
-                        prixBase: room.prixBase,
-                        porte: room.porte,
-                        categorie: CATEGORIES[room.idCategorie]
-                    }
-                    return <Chambre key={idx} {...roomProps}></Chambre>;
-                })}
-                </div>
-                </>
-            ) : (
-                <p>No rooms found</p>
-            )}
+          </div>
         </div>
       </Header>
     </main>

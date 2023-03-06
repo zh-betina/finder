@@ -12,7 +12,7 @@ app = Flask(__name__)
 CORS(app)
 
 ## DB connection
-SQLALCHEMY_DATABASE_URI = 'mysql+pymysql://admin:admin@172.18.0.2/hotelC'
+SQLALCHEMY_DATABASE_URI = 'mysql+pymysql://admin:admin@172.20.0.2/hotelC'
 engine = sqlalchemy.create_engine(SQLALCHEMY_DATABASE_URI, echo=True)
 
 
@@ -59,20 +59,17 @@ def findRoom(id):
 def getRooms():
    with engine.connect() as connection:
     result = connection.execute('SELECT * FROM chambre')
-    response = {}
+    response = []
     for row in result:
-      response = {
-        "roomDescr": [{
-          "id": row["id"],
+      response.append({
+        "id": row["id"],
           "nbCouchage": row["nbCouchage"],
           "porte": row["porte"],
           "etage": row["etage"],    
           "idCategorie": row["idCategorie"],
           "baignoire": row["baignoire"],
           "prixBase": row["prixBase"]
-        }]
-      }
-
+      })
     return make_response(jsonify(response), 200)
 
 # correct

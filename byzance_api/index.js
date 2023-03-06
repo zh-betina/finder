@@ -50,7 +50,7 @@ app.get("/chambres", function (req, res) {
       if (error) {
         res.json({ message: "Un problème lors de la requete est survenu" });
       }
-      res.json({ room: results.rows });
+      res.json(results.rows);
     }
   )
 });

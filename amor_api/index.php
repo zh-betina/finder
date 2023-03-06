@@ -44,6 +44,7 @@ $app->get('/inscription', function(Request $request, Response $response) {
 });
 
 
+
 // Modify the one below
 $app->get('/add-client', function(Request $request, Response $response) {
     return $this->renderer->render($response, "addClient.html", []);
@@ -73,8 +74,25 @@ $app->get('/chambres', function (Request $request, Response $response) {
     $response = $dbConn->query($query);
     $rooms = [];
     foreach($response as $room) {
-        //TODO : run over elements
-    }
+        array_push($rooms, (object)[
+            "id" => $room["id"],
+            "baignoire" => $room["baignoire"],
+            "nbCouchage" => $room["nbCouchage"],
+            "porte" => $room["porte"],
+            "etage" => $room["etage"],
+            "idCategorie" => $room["idCategorie"],
+            "prixBase" => $room["prixBase"]
+        ]);
+    };
+    $res = new Res();
+    return $res->withJson($rooms);
+});
+
+$app->get('/category', function (Request $request, Response $response) {
+    $query = "SELECT * FROM categorie";
+    $dbConn = new DB();
+    $dbConn->connect();
+    $response = $dbConn->query($query);
     $res = new Res();
     return $res->withJson($response);
 });

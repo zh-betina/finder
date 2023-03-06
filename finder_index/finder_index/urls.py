@@ -17,11 +17,15 @@ from django.urls import path, include
 from rest_framework import routers
 from user import views
 from core.views import index
+from user.views import users
+from hotel.views import hotels
 
-router = routers.DefaultRouter()
-router.register(r'users', views.UserView, 'user')
+#router = routers.DefaultRouter()
+#router.register(r'users', views.UserView, 'user')
 
 urlpatterns = [
-    path('api/', include(router.urls)),
+    #path('api/', include(router.urls)),
+    path('api/users/', users, name="users"),
+    path('api/hotels', hotels, name="hotels"),
     path("", index, name="index")
 ]
