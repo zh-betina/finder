@@ -1,24 +1,26 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Header from "../../components/Header/Header";
 import Input from "../../components/Input/Input";
 import Button from "../../components/Button/Button";
 import "./Auth.css";
+import Connection from "./ConnectionForm";
+import Registration from "./Registration";
 
 function Auth() {
+    const [formType, setFormType] = useState("connect");
+
     return (
         <main className="auth">
             <Header>
                 <section className="auth_form">
-                    <div className="auth_form_connect">
-                        <h2>Connexion</h2>
-                        <Input type="email" placeholder="john.doe@example.fr" />
-                        <Input type="password" placeholder="Mot de passe" />
-                        <Button text="Je me connecte" type="button_secondary"/>
-                    </div>
-                    <div className="auth_form_register">
-                        <h6>Je n'ai pas de compte</h6>
-                        <Button text="Inscription" type="button_secondary" />
-                    </div>
+                    {
+                        formType == "connect" &&
+                        <Connection setFormType={setFormType} />
+                    }
+                    {
+                        formType == "register" &&
+                        <Registration setFormType={setFormType}/>
+                    }
                 </section>
             </Header>
         </main>

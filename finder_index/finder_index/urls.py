@@ -17,7 +17,7 @@ from django.urls import path, include
 from rest_framework import routers
 from user import views
 from core.views import index
-from user.views import users
+from user.views import users, account
 from hotel.views import hotels
 
 #router = routers.DefaultRouter()
@@ -27,5 +27,6 @@ urlpatterns = [
     #path('api/', include(router.urls)),
     path('api/users/', users, name="users"),
     path('api/hotels', hotels, name="hotels"),
+    path('api/account/', account, name="account"),
     path("", index, name="index")
 ]
