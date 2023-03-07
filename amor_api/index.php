@@ -1,13 +1,16 @@
 <?php
 require __DIR__ . "/vendor/autoload.php";
 require './services/DB.php';
+require './settings.php';
 
 use \Psr\Http\Message\ServerRequestInterface as Request;
 use \Psr\Http\Message\ResponseInterface as Response;
 use \Slim\Http\Response as Res;
 use Slim\Views\PhpRenderer;
 use Tuupola\Middleware\CorsMiddleware;
+use \Tuupola\Middleware\JwtAuthentication;
 use Fastroute\Dispatcher;
+use \Firebase\JWT\JWT;
 
 $app = new \Slim\App;
 
@@ -24,8 +27,55 @@ $app->add(
     ])
 );
 
+$app->add(new JwtAuthentication([
+    "path" => "/api",
+    "attribute" => "decoded_token_data",
+    "secret" => "verySecretSecretThatNobodyWillKnow",
+    "algorithm" => ["HS256"],
+    "error" => function ($response, $arguments) {
+        $data["status"] = "error";
+        $data["message"] = $arguments["message"];
+        return $response
+            ->withHeader("Content-Type", "application/json")
+            ->write(json_encode($data, JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT));
+    }
+]));
+
+$app->group('/api', function () use ($app)  {
+
+   
+});
+
 $container = $app->getContainer();
 $container['renderer'] = new PhpRenderer("./templates");
+
+//------------------ AUTH ----------------------------------------//
+
+$app->post('/auth', function(Request $request, Response $response) {
+    $body = $request->getBody();
+    $data = json_decode($body, true);
+    $email = $data['email'];
+    $pwd = $data['password'];
+
+    $query = "SELECT * FROM user WHERE email='$email'";
+    $dbConn = new DB();
+    $dbConn->connect();
+    $res = $dbConn->query($query);
+
+    if(!$res[0]["email"]) {
+        return $this->response->withJson(['error' => true, 'message' => 'These credentials do not match our records.']);  
+    }
+
+    if ($res[0]["password"] != $pwd) {
+        return $this->response->withJson(['error' => true, 'message' => 'These credentials do not match our records.']);  
+    }
+
+    $settings = "verySecretSecretThatNobodyWillKnow"; // get settings array.
+    
+    $token = JWT::encode(['id' => $res['id'], 'email' => $res['email']], $settings, "HS256");
+
+    return $this->response->withJson(['token' => $token]);
+});
 
 
 
@@ -50,7 +100,7 @@ $app->get('/add-client', function(Request $request, Response $response) {
     return $this->renderer->render($response, "addClient.html", []);
 });
 
-$app->get('/chambre/{id}', function (Request $request, Response $response) {
+$app->get('/api/chambre/{id}', function (Request $request, Response $response) {
     $roomId = $request->getAttribute('id');
     
     if (intval($roomId) !== 0) {
@@ -67,7 +117,7 @@ $app->get('/chambre/{id}', function (Request $request, Response $response) {
     return $res->withJson($resBody);
 });
 
-$app->get('/chambres', function (Request $request, Response $response) {
+$app->get('/api/chambres', function (Request $request, Response $response) {
     $query = "SELECT * FROM chambre";
     $dbConn = new DB();
     $dbConn->connect();
@@ -88,7 +138,7 @@ $app->get('/chambres', function (Request $request, Response $response) {
     return $res->withJson($rooms);
 });
 
-$app->get('/category', function (Request $request, Response $response) {
+$app->get('/api/category', function (Request $request, Response $response) {
     $query = "SELECT * FROM categorie";
     $dbConn = new DB();
     $dbConn->connect();
@@ -99,7 +149,7 @@ $app->get('/category', function (Request $request, Response $response) {
 
 //-------------------GET USER ----------------------------//
 // refactor
-$app->get('/user', function (Request $request, Response $response) {
+$app->get('/api/user', function (Request $request, Response $response) {
     $data = $request->getQueryParams();
     $email = $data['email'];
     $mdp = $data['pwd'];
@@ -128,7 +178,7 @@ $app->get('/user', function (Request $request, Response $response) {
 
 //-------------------POST USER ----------------------------//
 
-$app->post('/user', function (Request $request, Response $response) {
+$app->post('/api/user', function (Request $request, Response $response) {
     $body = $request->getBody();
     $data = json_decode($body, true);
     $email = $data['email'];
@@ -183,7 +233,7 @@ $app->post('/addUser', function (Request $request, Response $response) {
 });
 
 
-$app->delete('/user/{id}', function (Request $request, Response $response) {
+$app->delete('/api/user/{id}', function (Request $request, Response $response) {
     $userId = $request->getAttribute('id');
     
     if (intval($userId) !== 0) {
@@ -201,7 +251,7 @@ $app->delete('/user/{id}', function (Request $request, Response $response) {
 
 
 //add more things for modification
-$app->put('/user', function (Request $request, Response $response) {
+$app->put('/api/user', function (Request $request, Response $response) {
     $body = $request->getBody();
     $data = json_decode($body, true);
 

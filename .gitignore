@@ -9,3 +9,5 @@ finder_index/reservation/__pycache__
 finder_index/user/__pycache__
 finder_index/client/node_modules
 finder_index/finder_index/__pycache__
+amor_api/vendor
+amor_api/.htaccess

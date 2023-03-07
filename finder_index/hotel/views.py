@@ -8,7 +8,22 @@ import json
 @csrf_exempt
 def hotels(request):
     if request.method == 'GET':
-        amorRooms = requests.get('http://localhost:8001/chambres')
+
+        ## TOKEN AUTH ##
+        authData = {
+            "email": "zorg@sio.fr",
+            "password": "zorg"
+        }
+        headers = {'Content-type': 'application/json'}
+        url = "http://localhost:8005/auth"
+        amorAuth = requests.post(url, json=authData, headers=headers)
+        resAmor = json.loads(amorAuth.text)
+        token = "Bearer " + resAmor["token"]
+
+        ## TOKEN AUTH ##
+
+        headersRooms = {'Authorization': token}
+        amorRooms = requests.get('http://localhost:8005/api/chambres', headers=headersRooms)
         resAmor = json.loads(amorRooms.text)
         for room in resAmor:
             room["hotel"] = 1
