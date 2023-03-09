@@ -6,13 +6,18 @@ from flask_cors import CORS
 from flask import request
 from flask import jsonify, request, make_response
 import sqlalchemy
+from sqlalchemy import text
+import jwt
+import config
+from datetime import datetime, timedelta
+from functools import wraps
 
 ## initialisation Flask & cors
 app = Flask(__name__)
 CORS(app)
 
 ## DB connection
-SQLALCHEMY_DATABASE_URI = 'mysql+pymysql://admin:admin@172.20.0.2/hotelC'
+SQLALCHEMY_DATABASE_URI = 'mysql+pymysql://admin:admin@172.18.0.2/hotelC'
 engine = sqlalchemy.create_engine(SQLALCHEMY_DATABASE_URI, echo=True)
 
 
@@ -32,9 +37,75 @@ def serveInscriptionFile():
   path = "inscription.html"
   return app.send_static_file(path)
 
+## ---------------- VERIFY TOKEN  -------------------- ##
+@app.route("/auth", methods=['POST'])
+def authenticate():
+  response = {
+    "success" : False,
+    "message" : "Invalid parameters",
+    "token" : ""
+  }
 
+  resBody = request.json
+  email = resBody["email"]
+  password = resBody["password"]
+
+  sql = (f"SELECT * "
+    f"FROM user "
+    f"WHERE email='{email}' AND mdp='{password}';")
+
+  if (not email and not password) or (not email or not password):
+    response["message"] = "Missing parameters"
   
-@app.route("/chambre/<id>", methods=['GET'])
+  if (email and password):
+    sql = (f"SELECT * "
+       f"FROM user "
+       f"WHERE email='{email}' AND mdp='{password}';")
+
+    with engine.connect() as connection:
+      result = connection.execute(text(sql))
+      for row in result:
+        if row[2] == password:
+          token = jwt.encode({
+            'email': row[1],
+            'exp': datetime.utcnow() + timedelta(hours=24)
+          }, config.SECRET_KEY)
+
+          response["message"] = "Token"
+          response["token"] = token
+          response["success"] = True
+      
+  return make_response(jsonify(response), 200)
+
+
+def token_required(function):
+    @wraps(function)
+    def decorated(*args, **kwargs):
+        token = None
+        if 'x-access-token' in request.headers:
+            token = request.headers['x-access-token']
+        if not token:
+            return 'Unauthorized Access!', 401
+
+        try:
+          data = jwt.decode(token, config.SECRET_KEY, 'HS256')
+        except:
+          return 'nok!', 401
+        email = data["email"]
+        sql = (f"SELECT * "
+          f"FROM user "
+          f"WHERE email='{email}';")
+        with engine.connect() as connection:
+          result = connection.execute(text(sql))
+          for row in result:
+            current_user = row[1]
+            if not current_user:
+              return 'nok!', 401   
+        return function(*args, **kwargs)
+    return decorated      
+## ---------------- VERIFY TOKEN  -------------------- ##
+
+@app.route("/chambre/<id>", methods=['POST'])
 def findRoom(id):
   with engine.connect() as connection:
     result = connection.execute('''SELECT * FROM chambre WHERE id=%s''', id)
@@ -56,19 +127,21 @@ def findRoom(id):
 
 #CORRECT : only last room is added, because it's overring
 @app.route("/chambres", methods=['GET'])
+@token_required
 def getRooms():
    with engine.connect() as connection:
-    result = connection.execute('SELECT * FROM chambre')
+    result = connection.execute(text('SELECT * FROM chambre'))
     response = []
     for row in result:
+      row_as_dict = row._mapping
       response.append({
-        "id": row["id"],
-          "nbCouchage": row["nbCouchage"],
-          "porte": row["porte"],
-          "etage": row["etage"],    
-          "idCategorie": row["idCategorie"],
-          "baignoire": row["baignoire"],
-          "prixBase": row["prixBase"]
+        "id": row_as_dict["id"],
+          "nbCouchage": row_as_dict["nbCouchage"],
+          "porte": row_as_dict["porte"],
+          "etage": row_as_dict["etage"],
+          "idCategorie": row_as_dict["idCategorie"],
+          "baignoire": row_as_dict["baignoire"],
+          "prixBase": row_as_dict["prixBase"]
       })
     return make_response(jsonify(response), 200)
 

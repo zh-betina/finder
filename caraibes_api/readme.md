@@ -18,6 +18,8 @@ The command will create a directory called venv, which contains a copy of the Py
 
 `source venv/bin/activate`
 
+`pip install -r requirements.txt`
+
 Once activated, the virtual environment’s bin directory will be added at the beginning of the $PATH variable. Your shell’s prompt will also change and show the name of the virtual environment you’re currently using. In this example that is venv.
 
 3) Once you are done with your work, deactivate the environment by typing deactivate, and you will return to your normal shell.
