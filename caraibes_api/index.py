@@ -17,7 +17,7 @@ app = Flask(__name__)
 CORS(app)
 
 ## DB connection
-SQLALCHEMY_DATABASE_URI = 'mysql+pymysql://admin:admin@172.18.0.2/hotelC'
+SQLALCHEMY_DATABASE_URI = 'mysql+pymysql://admin:admin@172.20.0.2/hotelC'
 engine = sqlalchemy.create_engine(SQLALCHEMY_DATABASE_URI, echo=True)
 
 
@@ -52,7 +52,7 @@ def authenticate():
 
   sql = (f"SELECT * "
     f"FROM user "
-    f"WHERE email='{email}' AND mdp='{password}';")
+    f"WHERE email='{email}' AND password='{password}';")
 
   if (not email and not password) or (not email or not password):
     response["message"] = "Missing parameters"
@@ -60,7 +60,7 @@ def authenticate():
   if (email and password):
     sql = (f"SELECT * "
        f"FROM user "
-       f"WHERE email='{email}' AND mdp='{password}';")
+       f"WHERE email='{email}' AND password='{password}';")
 
     with engine.connect() as connection:
       result = connection.execute(text(sql))

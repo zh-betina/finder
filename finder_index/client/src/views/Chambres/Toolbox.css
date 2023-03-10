@@ -1,0 +1,18 @@
+.toolbox {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    column-gap: 5vw;
+    position: absolute;
+    flex-wrap: wrap;
+    top: 20%;
+    width: 100%;
+    justify-content: center;
+}
+
+.filter_choice {
+    display: flex;
+    flex-direction: row;
+    column-gap: 1.2rem;
+    align-items: center;
+}

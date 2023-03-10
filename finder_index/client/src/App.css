@@ -3,3 +3,8 @@
 .app {
   font-family: 'Poppins', sans-serif;
 }
+
+.icon {
+  color: #85a4ce;
+  margin-right: .6rem;
+}

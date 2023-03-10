@@ -3,11 +3,12 @@ import "./Chambres.css";
 import { getRooms } from "../../api/rooms.api";
 import Header from "../../components/Header/Header";
 import Chambre from "./Chambre";
-import Input from "../../components/Input/Input";
+import Toolbox from "./Toolbox";
 
 function Chambres() {
   const [rooms, setRooms] = useState([]);
   const CATEGORIES = ["", "Standard", "Confort", "Premium", "Luxe"];
+  const [hotels, setHotels] = useState([]);
 
   useEffect(() => {
     getRooms().then((res) => {
@@ -19,33 +20,11 @@ function Chambres() {
   return (
     <main className="chambres">
       <Header>
-        <div className="toolbox">
-          <Input type="text" placeholder="Chercher" />
-          <div className="filter_choice">
-            <h3>Filtrer par :</h3>
-            <label>
-              <input type="checkbox" />
-              hôtel
-            </label>
-            <label>
-              <input type="checkbox" />
-              prix
-            </label>
-            <label>
-              <input type="checkbox" />
-              nombre de couchages
-            </label>
-            <label>
-              <input type="checkbox" />
-              étage
-            </label>
-            <label>
-              <input type="checkbox" />
-              categorie
-            </label>
-          </div>
-        </div>
+        <Toolbox />
         <div className="chambres_list">
+          <div className="chambres-tabs">
+
+          </div>
           <div className="rooms">
             {rooms.length > 0 ? (
               rooms.map((room, idx) => {
@@ -63,7 +42,7 @@ function Chambres() {
                 );
               })
             ) : (
-              <p>No rooms found</p>
+              <p>Pas de chambres disponibles</p>
             )}
           </div>
         </div>

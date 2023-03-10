@@ -1,0 +1,17 @@
+.cookies-footer {
+    position: absolute;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.726);
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    color: #fff;
+    box-sizing: border-box;
+    padding: 1rem;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.cookies-footer-text {
+    font-size: 11px;
+}

@@ -14,7 +14,7 @@ function Registration({ setFormType }) {
   return (
     <>
       <div className="auth_form_connect">
-        <h2>Création du component</h2>
+        <h2>Création du compte</h2>
         <Input onChange={(e)=> setForm({...form, "email": e.target.value})} type="email" placeholder="john.doe@example.fr" />
         <Input type="email" placeholder="Repeter le mail" />
         <Input onChange={(e)=> setForm({...form, "password": e.target.value})} type="password" placeholder="Mot de passe" />

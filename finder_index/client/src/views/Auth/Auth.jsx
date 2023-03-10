@@ -1,7 +1,5 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import Header from "../../components/Header/Header";
-import Input from "../../components/Input/Input";
-import Button from "../../components/Button/Button";
 import "./Auth.css";
 import Connection from "./ConnectionForm";
 import Registration from "./Registration";
