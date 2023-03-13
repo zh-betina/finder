@@ -20,10 +20,12 @@ function Chambres() {
   return (
     <main className="chambres">
       <Header>
-        <Toolbox />
+        <div className="chambres-top">
+          <Toolbox />
+          {rooms.length > 0 && <h4 className="rooms-nb-info">{rooms.length} chambres disponibles</h4>}
+        </div>
         <div className="chambres_list">
           <div className="chambres-tabs">
-
           </div>
           <div className="rooms">
             {rooms.length > 0 ? (

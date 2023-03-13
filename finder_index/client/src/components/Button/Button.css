@@ -1,5 +1,10 @@
 .button {
-    min-width: 200px;
+    padding-left: 2rem;
+    padding-right: 2rem;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
     height: 41px;
     border-radius: 11px;
     font-size: 15px;

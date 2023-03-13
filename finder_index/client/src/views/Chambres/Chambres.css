@@ -19,3 +19,16 @@
     row-gap: 1rem;
     flex-wrap: wrap;
 }
+
+.chambres-top {
+    position: absolute;
+    top: 20%;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    padding-left: 13rem;
+}
+
+.rooms-nb-info {
+    padding-top: 1rem;
+}

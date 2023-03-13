@@ -2,7 +2,7 @@
     width: 100vw;
     height: 100vh;
     overflow: hidden;
-    background-image: url("../../assets/img/mainPage.jpg");
+    background-image: url("../../assets/img/bgr_dark.png");
     background-size: cover;
     background-position: center;
 }

@@ -20,3 +20,8 @@ a:hover {
 h1, h2, h3, h4, p {
   margin: 0;
 }
+
+input {
+  box-sizing: border-box;
+  padding: .6rem;
+}

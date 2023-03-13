@@ -19,7 +19,7 @@ def users(request):
         return JsonResponse({"res": "POSTTT"}, safe=False)
 
 @csrf_exempt
-def account(request):
+def accountCreate(request):
     if request.method == 'POST':
         body = json.loads(request.body.decode('utf-8'))
         emailVal = body.get("email")
@@ -27,7 +27,6 @@ def account(request):
         bdayVal = body.get("bday")
         user = User(email=emailVal, password=passwordVal, bday=bdayVal)
         response = {}
-
         try:
             user.save()
             response = {"code": 201, "status": "created"}
@@ -35,3 +34,13 @@ def account(request):
             response = {"code": 500, "status": "Fail"}
 
         return JsonResponse(response, safe=False)
+
+@csrf_exempt
+def login(request):
+    if request.method == 'POST':
+        body = json.loads(request.body.decode('utf-8'))
+        emailVal = body.get("email")
+        passwordVal = body.get("password")
+        bdayVal = body.get("bday")
+        user = User(email=emailVal, password=passwordVal, bday=bdayVal)
+        response = {}
