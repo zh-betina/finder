@@ -2,11 +2,13 @@ from django.shortcuts import render
 from django.http import JsonResponse
 from django.core import serializers
 from django.views.decorators.csrf import csrf_exempt
+from core.authentication import token_required
 from core.authentication import AmorAPI, ByzanceAPI, CaraibesAPI
 import requests
 import json
 
 @csrf_exempt
+@token_required
 def hotels(request):
     if request.method == 'GET':
 
@@ -36,6 +38,6 @@ def hotels(request):
         
         ## Response
         response = resAmor + resByzance + resCaraibes
-        jsonString = json.dumps(response)
+        json.dumps(response)
         return JsonResponse(response, safe=False)
 
