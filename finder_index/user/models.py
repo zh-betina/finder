@@ -3,7 +3,7 @@ from django.contrib.auth.models import AbstractUser
 
 class User(AbstractUser):
     email = models.EmailField(unique=True)
-    password = models.CharField("password", max_length=50)
+    password = models.CharField("password", max_length=255)
     bday = models.DateField("bday")
     username = None
     is_superuser = None
