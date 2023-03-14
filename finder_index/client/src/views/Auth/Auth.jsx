@@ -4,7 +4,7 @@ import "./Auth.css";
 import Connection from "./ConnectionForm";
 import Registration from "./Registration";
 
-function Auth() {
+function Auth(props) {
     const [formType, setFormType] = useState("connect");
 
     return (
@@ -13,7 +13,7 @@ function Auth() {
                 <section className="auth_form">
                     {
                         formType == "connect" &&
-                        <Connection setFormType={setFormType} />
+                        <Connection setIsConnected={props.setIsConnected} setFormType={setFormType} />
                     }
                     {
                         formType == "register" &&

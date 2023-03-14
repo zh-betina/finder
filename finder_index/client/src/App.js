@@ -6,7 +6,8 @@ import Nav from "./components/Nav/Nav";
 import Chambres from "./views/Chambres/Chambres";
 import Auth from "./views/Auth/Auth";
 import CookiesFooter from "./components/CookiesFooter/CookiesFooter";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
+import { ConnectionContext } from "./store/ConnectionContext";
 
 function App() {
 
@@ -17,16 +18,27 @@ function App() {
     setCookiesAccepted(localStorageInfo ?? false);
   }, []);
 
+
+  const connectionContext = useContext(ConnectionContext);
+  const [isConnected, setIsConnected] = useState(connectionContext);
+
   return (
     <div className="app">
       <BrowserRouter>
         <Layout>
-          <Nav />
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/chambres" element={<Chambres />} />
-            <Route path="/connexion" element={<Auth />} />
-          </Routes>
+        <ConnectionContext.Provider value={isConnected}>
+          <Nav setIsConnected={setIsConnected} isConnected={connectionContext} />
+            <Routes>
+              <Route path="/" element={<Home />} />
+              <Route path="/chambres" element={<Chambres />} />
+              {isConnected
+                ? <Route path="/logout" />
+                : <Route path="/connexion" element={<Auth setIsConnected={setIsConnected} />} />
+              }
+              {isConnected && <Route path="/reservations" />}
+              {isConnected && <Route path="/account" />}
+            </Routes>
+          </ConnectionContext.Provider>
           <CookiesFooter cookiesAccepted={cookiesAccepted} />
         </Layout>
       </BrowserRouter>

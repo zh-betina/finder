@@ -8,7 +8,6 @@ import requests
 import json
 
 @csrf_exempt
-@token_required
 def hotels(request):
     if request.method == 'GET':
 
