@@ -18,11 +18,13 @@ from user import views
 from core.views import index
 from user.views import users, accountCreate, login
 from hotel.views import hotels
+from reservation.views import availableRooms
 
 urlpatterns = [
     path('api/users/', users, name="users"),
     path('api/hotels', hotels, name="hotels"),
     path('api/signup/', accountCreate, name="accountCreate"),
     path('api/login/', login, name="login"),
+    path('api/available', availableRooms, name="availableRooms"),
     path("", index, name="index")
 ]

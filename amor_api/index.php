@@ -147,6 +147,46 @@ $app->get('/api/category', function (Request $request, Response $response) {
     return $res->withJson($response);
 });
 
+//-------------------GET RESERVATIONS---------------------//
+
+$app->get('/api/available-rooms', function (Request $request, Response $response) {
+    $data = $request->getQueryParams();
+    $dateStart = $data["start"];
+    $dateEnd = $data["end"];
+    $nbCouchages = $data["nb"];
+    $rooms = [];
+
+    $query = "SELECT chambre.id, nbCouchage, porte, etage, idCategorie, baignoire, prixBase FROM chambre 
+    LEFT JOIN ligne_reservation ON id=idchambre
+    LEFT JOIN reservation ON idreservation=reservation.id
+    WHERE nbCouchage = $nbCouchages AND (idreservation IS NULL
+    OR ($dateStart < dateD AND $dateEnd < dateF)
+    OR ($dateStart > dateD AND $dateEnd > dateF)
+    )";
+
+    $dbConn = new DB();
+    $dbConn->connect();
+    $response = $dbConn->query($query);
+
+    forEach($response as $room) {
+        array_push($rooms, (object)[
+            "id" => $room["id"],
+            "baignoire" => $room["baignoire"],
+            "nbCouchage" => $room["nbCouchage"],
+            "porte" => $room["porte"],
+            "etage" => $room["etage"],
+            "idCategorie" => $room["idCategorie"],
+            "prixBase" => $room["prixBase"]
+        ]);
+    };
+
+    $res = new Res();
+
+    return $res->withJson($rooms);
+
+
+});
+
 //-------------------GET USER ----------------------------//
 // refactor
 $app->get('/api/user', function (Request $request, Response $response) {

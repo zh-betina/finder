@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import Input from "../../components/Input/Input";
 import Button from "../../components/Button/Button";
 import { login } from "../../api/auth.api";
-import { redirect } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import "./Connection.css";
 

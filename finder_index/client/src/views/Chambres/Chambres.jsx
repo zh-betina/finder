@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { useLocation } from "react-router-dom";
 import "./Chambres.css";
 import { getRooms } from "../../api/rooms.api";
 import Header from "../../components/Header/Header";
@@ -7,14 +8,19 @@ import Toolbox from "./Toolbox";
 
 function Chambres() {
   const [rooms, setRooms] = useState([]);
-  const CATEGORIES = ["", "Standard", "Confort", "Premium", "Luxe"];
-  const [hotels, setHotels] = useState([]);
+  const [displayedRooms, setDisplayedRooms] = useState([]);
+  const { state } = useLocation();
 
   useEffect(() => {
-    getRooms().then((res) => {
-      console.log(res.data);
-      setRooms(res.data);
-    });
+    if (state == null) {
+      getRooms().then((res) => {
+        setRooms(res.data);
+        setDisplayedRooms(res.data);
+      });
+    } else {
+      setRooms(state);
+      setDisplayedRooms(state);
+    }
   }, []);
 
   return (
@@ -22,14 +28,14 @@ function Chambres() {
       <Header>
         <div className="chambres-top">
           <Toolbox />
-          {rooms.length > 0 && <h4 className="rooms-nb-info">{rooms.length} chambres disponibles</h4>}
+          {displayedRooms.length > 0 && <h4 className="rooms-nb-info">{displayedRooms.length} chambres disponibles</h4>}
         </div>
         <div className="chambres_list">
           <div className="chambres-tabs">
           </div>
           <div className="rooms">
-            {rooms.length > 0 ? (
-              rooms.map((room, idx) => {
+            {displayedRooms.length > 0 ? (
+              displayedRooms.map((room, idx) => {
                 return (
                   <Chambre
                     key={idx}
