@@ -10,6 +10,7 @@ function Chambres() {
   const [rooms, setRooms] = useState([]);
   const [displayedRooms, setDisplayedRooms] = useState([]);
   const { state } = useLocation();
+  const [searchValue, setSearchValue] = useState("");
 
   useEffect(() => {
     if (state == null) {
@@ -23,11 +24,12 @@ function Chambres() {
     }
   }, []);
 
+  console.log(searchValue);
   return (
     <main className="chambres">
       <Header>
         <div className="chambres-top">
-          <Toolbox />
+          <Toolbox searchValue={searchValue} setSearchValue={()=> setSearchValue()} />
           {displayedRooms.length > 0 && <h4 className="rooms-nb-info">{displayedRooms.length} chambres disponibles</h4>}
         </div>
         <div className="chambres_list">
